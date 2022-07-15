@@ -1,1 +1,1 @@
-right button drag to scroll
+ drag right mouse button to scroll
