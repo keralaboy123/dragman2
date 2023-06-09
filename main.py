@@ -3,18 +3,30 @@ from tkinter import messagebox
 import pynput
 import io, sys,mouse
 
-mouseControll = pynput.mouse.Controller()
-
 class logger(io.StringIO):
     pass
 
+mouseControll = pynput.mouse.Controller()
 #log = sys.stdout = sys.stderror= logger()
 
 class STATE:
         def __init__(self):
-            self.isRightholding = False
-            self.mouseMoved = False
+            self.is_RightButton_Still_holding = False
+            self.is_mouseMoved_after_mouse_down = False
 
+        def _is_RightButton_Still_holding(self):
+            if self.is_RightButton_Still_holding:
+                return True
+
+        def _is_mouseMoved_after_mouse_down(self):
+            if self.is_mouseMoved_after_mouse_down:
+                return True
+
+        def set_mouseMoved_after_mouse_down(self,value):
+            self.is_mouseMoved_after_mouse_down = value
+
+        def set_RightButton_Still_holding(self,value):
+            self.is_RightButton_Still_holding=value
 
 class logicalDragAnalyser():
     " if mouse moving while button pressed its dragging.. "
@@ -22,55 +34,58 @@ class logicalDragAnalyser():
         self.STATE = STATE()
 
     def is_mousemoved(self):
-        if self.STATE.mouseMoved:
-            self.STATE.mouseMoved = False
+        if self.STATE._is_mouseMoved_after_mouse_down():
+            self.STATE.set_mouseMoved_after_mouse_down(False)
             return True
 
-    def mousemove(self):
-        self.STATE.mouseMoved = True
-        # print("button move  of  logicanalyser")
+    def on_mousemove(self):
+        self.STATE.set_mouseMoved_after_mouse_down(True)
+        print("button move  of  logicanalyser")
 
-    def button_down(self):
-        self.STATE.isRightholding = True
+    def on_button_down(self):
+        self.STATE.set_RightButton_Still_holding(True)
         print("button down  of  logicanalyser")
 
-    def button_up(self):
-        self.STATE.isRightholding = False
+    def on_button_up(self):
+        self.STATE.set_RightButton_Still_holding( False )
         print("button up  of  logicanalyser")
 
     def is_draging(self):
+        "this is the api should be used by other subclasses"
         if self.is_mousemoved():
-            if self.STATE.isRightholding:
+            if self.STATE._is_RightButton_Still_holding():
                 return True
 
 
-
-class DragEventManager(object):
+class DragEventManager:
     def __init__(self):
         "handles drag events "
         self.logicalDragAnalyser = logicalDragAnalyser()
+        self.listener = pynput.mouse.Listener(on_move=self.on_move, on_click=self.on_click)  # ,suppress=True)
 
     def on_click(self, x, y, button, notreleased):
         print("onclick of drageveMgr")
         if button == pynput.mouse.Button.right:
            if notreleased:
-               print("key pressing  drageveMgr")
+               print("key pressed  drageveMgr")
                self.on_buttondown(x, y, button, notreleased)
            else:
-               print("key release drageveMgr")
+               print("key released drageveMgr")
                self.on_buttonup(x, y, button, notreleased)
 
     def on_buttonup(self,x, y, button, notreleased):
         print(" on button up   of  DragEventManager ")
-        self.logicalDragAnalyser.button_up()
+        self.logicalDragAnalyser.on_button_up()
 
     def on_buttondown(self,x, y, button, notreleased):
         print(" onButtonDown of DragEventManage  ")
-        self.logicalDragAnalyser.button_down()
+        self.logicalDragAnalyser.on_button_down()
 
     def on_move(self, x, y):
-        #print(" onMOve  of DragEventManage   ")
-        self.logicalDragAnalyser.mousemove()
+        print(" onMOve  of DragEventManage   ")
+        self.logicalDragAnalyser.on_mousemove()
+        print("moved from "+str(mouseControll.position) )
+        print("moved " +str(x)+str(y))
         if self.logicalDragAnalyser.is_draging():
             self.on_dragEvent(x,y)
 
@@ -78,7 +93,6 @@ class DragEventManager(object):
         self.listener.stop()
 
     def run(self):
-        self.listener = pynput.mouse.Listener(on_move=self.on_move, on_click=self.on_click)#,suppress=True)
         self.listener.start()
 
     def on_dragEvent(self,x,y):
@@ -88,13 +102,13 @@ class DragEventManager(object):
 class maper(DragEventManager):
     def __init__(self,scrollstep=0.03):
         super().__init__()
-        self.is_draged_beforeButtonDown =False
+        self.is_draged_beforeButtonUp =False
         self.scrollstep = scrollstep
 
-    def is_draged_justbefore(self):
-        if self.is_draged_beforeButtonDown:
-            print ("drag happened just before buttin up")
-            self.is_draged_beforeButtonDown =False
+    def _is_draged_beforeButtonUp(self):
+        if self.is_draged_beforeButtonUp:
+            print ("drag happened just before button up")
+            self.is_draged_beforeButtonUp =False
             return True
 
     def on_buttondown(self,x,y,button,released):
@@ -103,21 +117,21 @@ class maper(DragEventManager):
 
     def on_buttonup(self,x, y, button, notreleased):
         super().on_buttonup(x, y, button, notreleased)
-        print(" checking is drag happened")
+        print(" checking.. is drag happened")
 
-        if self.is_draged_justbefore():
-            print ("# generating right button click")
-            mouseControll.click(button,1)
+        if self._is_draged_beforeButtonUp():
+            print("draged before right button up")
             self.listener.suppress_event()
         else:
-            print("drag not happened just before right buttin up")
+            print("no drag just before right button up")
+
 
 
     def on_dragEvent(self,x,y):
-        self.is_draged_beforeButtonDown = True
-        print ("drag happened ")
+        print("ondrag happened ")
+        self.is_draged_beforeButtonUp = True
         mouseControll.scroll(0, self.scrollstep)
-        self.listener.suppress_event()
+
 
 
 class gui(maper):
@@ -135,3 +149,4 @@ class gui(maper):
 
 if __name__ == "__main__":
     gui().run()
+
