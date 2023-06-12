@@ -4,6 +4,7 @@ import pynput
 import io, sys
 
 class logger(io.StringIO):
+
     pass
 
 
@@ -87,8 +88,6 @@ class DragEventManager:
     def on_move(self, x, y):
         print(self.on_move.__qualname__)
         self.logicalDragAnalyser.on_mousemove()
-        print("moved from "+str(mouseControll.position) )
-        print("moved " +str(x)+str(y))
         if self.logicalDragAnalyser.is_draging():
             self.on_dragEvent(x,y)
 
@@ -115,7 +114,7 @@ class maper(DragEventManager):
             return True
 
     def on_buttondown(self,x,y,button,released):
-        print(self.on_buttondown.__qualname__)    
+        print(self.on_buttondown.__qualname__)
         super().on_buttondown(x,y,button,released)
         self.listener.suppress_event()
 
@@ -140,7 +139,7 @@ class manager(maper):
 
 
 class gui(manager):
-    "running and stoping mape manger graphicaly"
+    "running and stoping maper graphicaly"
     root = tk.Tk()
     def run(self):
         self.root.protocol("WM_DELETE_WINDOW", self.stop)
