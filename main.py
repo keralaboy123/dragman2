@@ -4,7 +4,6 @@ import pynput
 import io, sys
 
 class logger(io.StringIO):
-
     pass
 
 
