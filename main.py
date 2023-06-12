@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
 import pynput
-import io, sys,mouse
+import io, sys
 
 class logger(io.StringIO):
     pass
+
 
 mouseControll = pynput.mouse.Controller()
 #log = sys.stdout = sys.stderror= logger()
@@ -39,16 +40,18 @@ class logicalDragAnalyser():
             return True
 
     def on_mousemove(self):
+        print(self.on_mousemove.__qualname__)
         self.STATE.set_mouseMoved_after_mouse_down(True)
-        print("button move  of  logicanalyser")
+
 
     def on_button_down(self):
+        print(self.on_button_down.__qualname__)
         self.STATE.set_RightButton_Still_holding(True)
-        print("button down  of  logicanalyser")
+
 
     def on_button_up(self):
+        print(self.on_button_up.__qualname__)
         self.STATE.set_RightButton_Still_holding( False )
-        print("button up  of  logicanalyser")
 
     def is_draging(self):
         "this is the api should be used by other subclasses"
@@ -59,30 +62,30 @@ class logicalDragAnalyser():
 
 class DragEventManager:
     def __init__(self):
-        "handles drag events "
+        "creates drag detection and provideds callback for drag event"
         self.logicalDragAnalyser = logicalDragAnalyser()
         self.listener = pynput.mouse.Listener(on_move=self.on_move, on_click=self.on_click)  # ,suppress=True)
 
     def on_click(self, x, y, button, notreleased):
-        print("onclick of drageveMgr")
+        print(self.on_click.__qualname__)
         if button == pynput.mouse.Button.right:
            if notreleased:
-               print("key pressed  drageveMgr")
+               print("      right button not released")
                self.on_buttondown(x, y, button, notreleased)
            else:
-               print("key released drageveMgr")
+               print("      right button released")
                self.on_buttonup(x, y, button, notreleased)
 
     def on_buttonup(self,x, y, button, notreleased):
-        print(" on button up   of  DragEventManager ")
+        print(self.on_buttonup.__qualname__)
         self.logicalDragAnalyser.on_button_up()
 
     def on_buttondown(self,x, y, button, notreleased):
-        print(" onButtonDown of DragEventManage  ")
+        print(self.on_buttondown.__qualname__)
         self.logicalDragAnalyser.on_button_down()
 
     def on_move(self, x, y):
-        print(" onMOve  of DragEventManage   ")
+        print(self.on_move.__qualname__)
         self.logicalDragAnalyser.on_mousemove()
         print("moved from "+str(mouseControll.position) )
         print("moved " +str(x)+str(y))
@@ -96,7 +99,7 @@ class DragEventManager:
         self.listener.start()
 
     def on_dragEvent(self,x,y):
-        print ("on drag event ")
+        print(self.on_dragEvent.__qualname__)
 
 
 class maper(DragEventManager):
@@ -106,37 +109,39 @@ class maper(DragEventManager):
         self.scrollstep = scrollstep
 
     def _is_draged_beforeButtonUp(self):
+        print(self._is_draged_beforeButtonUp.__qualname__)
         if self.is_draged_beforeButtonUp:
-            print ("drag happened just before button up")
             self.is_draged_beforeButtonUp =False
             return True
 
     def on_buttondown(self,x,y,button,released):
+        print(self.on_buttondown.__qualname__)    
         super().on_buttondown(x,y,button,released)
         self.listener.suppress_event()
 
     def on_buttonup(self,x, y, button, notreleased):
+        print(self.on_buttonup.__qualname__)
         super().on_buttonup(x, y, button, notreleased)
-        print(" checking.. is drag happened")
-
         if self._is_draged_beforeButtonUp():
-            print("draged before right button up")
+            print("   draged before right button up")
             self.listener.suppress_event()
         else:
-            print("no drag just before right button up")
-
-
-
+            print("   no drag just before right button up")
     def on_dragEvent(self,x,y):
-        print("ondrag happened ")
+        print(self.on_dragEvent.__qualname__)
         self.is_draged_beforeButtonUp = True
+
+class manager(maper):
+    def on_dragEvent(self,x,y):
+        print(self.on_dragEvent.__qualname__)
+        super().on_dragEvent(x,y)
         mouseControll.scroll(0, self.scrollstep)
 
 
 
-class gui(maper):
+class gui(manager):
+    "running and stoping mape manger graphicaly"
     root = tk.Tk()
-
     def run(self):
         self.root.protocol("WM_DELETE_WINDOW", self.stop)
         super().run()
