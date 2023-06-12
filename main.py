@@ -138,7 +138,7 @@ class manager(maper):
 
 
 class gui(manager):
-    "running and stoping maper graphicaly"
+    "running and stoping maper manager graphicaly"
     root = tk.Tk()
     def run(self):
         self.root.protocol("WM_DELETE_WINDOW", self.stop)
