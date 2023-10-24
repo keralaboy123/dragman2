@@ -134,6 +134,7 @@ class maper(DragEventManager):
         self.is_draged_beforeButtonUp = True
 
 class manager(maper):
+    "this class is an example for knowing how to extend"
     def on_dragEvent(self,x,y):
         print(self.on_dragEvent.__qualname__)
         print ("drag detected ")
