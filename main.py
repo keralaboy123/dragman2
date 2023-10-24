@@ -1,5 +1,3 @@
-import tkinter as tk
-from tkinter import messagebox
 import pynput
 import io, sys
 
@@ -157,5 +155,7 @@ class gui(manager):
 
 
 if __name__ == "__main__":
+    import tkinter as tk
+    from tkinter import messagebox
     gui().run()
 
