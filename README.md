@@ -1,6 +1,8 @@
 ## dragman ###
 built using pynput library
-
-drag right mouse button to scroll x and y axis
+this library provides drag detection.
 
 currently it is incomplete because issue in pynput library
+only windows is supported. 
+
+
