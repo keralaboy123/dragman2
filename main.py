@@ -3,6 +3,10 @@ from tkinter import messagebox
 import pynput
 import io, sys
 
+"this library adds drag detection to pynput library"
+
+
+
 class logger(io.StringIO):
     pass
 
@@ -132,6 +136,7 @@ class maper(DragEventManager):
 class manager(maper):
     def on_dragEvent(self,x,y):
         print(self.on_dragEvent.__qualname__)
+        print ("drag detected ")
         super().on_dragEvent(x,y)
         mouseControll.scroll(0, self.scrollstep)
 
