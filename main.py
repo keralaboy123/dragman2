@@ -106,7 +106,7 @@ class maper(DragEventManager):
     def __init__(self,scrollstep=0.03):
         super().__init__()
         self.is_draged_beforeButtonUp =False
-        self.scrollstep = scrollstep
+        
 
     def _is_draged_beforeButtonUp(self):
         print(self._is_draged_beforeButtonUp.__qualname__)
@@ -133,6 +133,9 @@ class maper(DragEventManager):
 
 class manager(maper):
     "this class is an example for knowing how to extend"
+    def __init__(self,scrollstep=0.03):
+            self.scrollstep = scrollstep
+            super().__init__()
     def on_dragEvent(self,x,y):
         print(self.on_dragEvent.__qualname__)
         print ("drag detected ")
