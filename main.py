@@ -103,7 +103,7 @@ class DragEventManager:
 
 
 class maper(DragEventManager):
-    def __init__(self,scrollstep=0.03):
+    def __init__(self):
         super().__init__()
         self.is_draged_beforeButtonUp =False
         
