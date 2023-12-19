@@ -135,7 +135,6 @@ class manager(maper):
     "this class is an example for knowing how to extend"
     
     def __init__(self,scrollstep=0.03):
-        self.scrollstep = scrollstep
         super().__init__()
         
     def on_dragEvent(self,x,y):
