@@ -133,14 +133,15 @@ class maper(DragEventManager):
 
 class manager(maper):
     "this class is an example for knowing how to extend"
+    
     def __init__(self,scrollstep=0.03):
         self.scrollstep = scrollstep
         super().__init__()
+        
     def on_dragEvent(self,x,y):
-        print(self.on_dragEvent.__qualname__)
         print ("drag detected ")
         super().on_dragEvent(x,y)
-        mouseControll.scroll(0, self.scrollstep)
+
 
 
 
