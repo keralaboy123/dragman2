@@ -1,7 +1,7 @@
 import pynput
 import io, sys
 
-"this library adds drag detection to pynput library"
+"this library adds right mouse button drag detection to pynput library"
 
 
 
