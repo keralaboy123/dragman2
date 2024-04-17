@@ -5,15 +5,20 @@ only windows is currenlty supported because limitations of pynput library
 
 <pre>
   a software is built using this library is also called dragman.
-  it is closed source currently .you can downlaod it from here
-  http://dragman.great-site.net
-  
+  it is closed source currently .i will make it opensource if got financial support.
+  untill that you can downlaod free trial  from here <a href="http://dragman.great-site.net">http://dragman.great-site.net
 </pre>
 
 ### how to use
+<pre>
 
 import dragman
 
-class dragdetector(DragEventManager):
-    def on_dragEvent(self,x,y):
-       print ("rightmouse button of mouse is holding and mouse moved after that ")
+class dragdetector(dragman.DragEventManager):
+       def on_dragEvent(self,x,y):
+               print ("rightmouse button of mouse is holding and mouse moved after that ")
+
+if __name__ == "__main__":
+      detector = dragdetector()
+      detector.start()
+</pre>
