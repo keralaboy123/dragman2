@@ -20,5 +20,5 @@ class dragdetector ( dragman.DragEventManager ):
 
 if __name__ == "__main__":
       detector = dragdetector()
-      detector.start()
+      detector.run()
 </pre>
