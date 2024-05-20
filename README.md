@@ -14,9 +14,9 @@ only windows is currenlty supported because limitations of pynput library
 
 import dragman
 
-class dragdetector(dragman.DragEventManager):
-       def on_dragEvent(self,x,y):
-               print ("rightmouse button of mouse is holding and mouse moved after that ")
+class dragdetector ( dragman.DragEventManager ):
+       def on_dragEvent ( self,x,y ):
+               print ("right button of mouse is holding and mouse moved after that ")
 
 if __name__ == "__main__":
       detector = dragdetector()
