@@ -1,12 +1,12 @@
-### dragman 
+ ### dragman 
 this library provides drag detection .it uses pynput library as base library.
 
 only windows is currenlty supported because limitations of pynput library
 
 <pre>
-  a software is built using this library is also called dragman.
+  a software  built using this library is also called dragman.
   it is closed source currently .i will make it opensource if got financial support.
-  untill that you can downlaod free trial  from here <a href="http://dragman.great-site.net">http://dragman.great-site.net
+  you can downlaod free trial  from here <a href="http://dragman.great-site.net">http://dragman.great-site.net
 </pre>
 
 ### how to use
